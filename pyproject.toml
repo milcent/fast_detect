@@ -1,0 +1,27 @@
+[project]
+name = "fast-detect"
+version = "0.1.0"
+description = "YOLO-based object detection for batch video files with frame-skipping (--compress) for fast surveillance footage review."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.13"
+dependencies = [
+    "opencv-python",
+    "pandas",
+    "torch",
+    "torchvision",
+    "ultralytics",
+]
+
+[project.scripts]
+fast-detect = "fast_detect.cli:main"
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.uv]
+package = true
