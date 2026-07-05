@@ -1,19 +1,18 @@
 # fast_detect
 
-YOLO-based object detection for batch video files. Scans one or more videos (including DVR `.dav` files), detects objects of interest, and exports a JSON report with the timestamps of every detection.
+YOLO-based object detection for batch video files. Scans one or more videos, detects objects of interest, and exports a JSON report with the timestamps of every detection.
 
 ## Features
 
-- **Batch processing** — analyse individual files or entire folders (with optional recursion)
-- **`--compress` mode** — process only 1 out of every N frames for dramatically faster throughput on long recordings
-- **Highlight clips** (`--clip`) — automatically extract a merged highlight video containing only the segments with detected objects
-- **Source transitions** — black screen title cards between different source videos in highlight clips for clear visual separation
-- **Bounding-box overlays** (`--clip-boxes`) — optionally draw YOLO bounding boxes with class labels and confidence on highlight frames
-- **Custom models** — use any YOLOv8 weights (standard or fine-tuned with custom classes); standard weights are auto-downloaded on first run
-- **Flexible class filtering** — specify any class names your model recognises (COCO classes for pretrained models, custom names for fine-tuned models)
-- **JSON output** — structured report with per-video stats and per-class timestamped detections
-- **DVR support** — natively handles `.dav` surveillance footage alongside standard formats
-- **Cross-platform** — runs on Windows, macOS, and Linux
+- **Batch processing** — analyse individual files or entire folders (with optional recursion).
+- **`--compress` mode** — process only 1 out of every N frames for dramatically faster throughput on long recordings. The interval should be set according to what you are looking for, the greater the interval, the faster the processing but the greater the chance of missing something. A value of 1 means no compression and all frames are processed.
+- **Confidence setting** - minimum detection confidence (0-1), higher values = fewer detections but more accurate.
+- **Highlight clips** (`--clip`) — automatically extract a merged highlight video containing only the segments with detected objects  .
+- **Source transitions** — black screen title cards between different source videos in highlight clips for clear visual separation.
+- **Bounding-box overlays** (`--clip-boxes`) — optionally draw YOLO bounding boxes with class labels and confidence on highlight frames.
+- **Custom models** — use any YOLOv8 weights (standard or fine-tuned with custom classes); standard weights are auto-downloaded on first run.
+- **Flexible class filtering** — specify any class names your model recognises (COCO classes for pretrained models, custom names for fine-tuned models).
+- **JSON output** — structured report with per-video stats and per-class timestamped detections.
 
 ## Installation
 
@@ -21,7 +20,7 @@ This project uses [uv](https://github.com/astral-sh/uv) for environment manageme
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/fast_detect.git
+git clone https://github.com/milcent/fast_detect.git
 cd fast_detect
 
 # Install dependencies (creates .venv automatically)
@@ -58,8 +57,7 @@ uv run fast-detect \
     --recursive \
     --objects person car truck \
     --compress 60 \
-    --model yolov8l.pt \
-    --output results.json
+    --model yolov8l.pt
 
 # Detection + highlight clip with bounding boxes
 uv run fast-detect \
@@ -176,7 +174,7 @@ uv run fast-detect --videos cam01.dav --objects person car --compress 30 --clip 
 
 > ⚠️ **Performance warning:** `--clip-boxes` **re-runs the YOLO model on every frame** of the highlight video. This is a separate inference pass on top of the initial detection scan and adds significant time and GPU/CPU compute. The cost scales with the total number of highlight frames (which depends on detection density and `--clip-buffer`). For large batches or long highlights, expect a noticeable increase in processing time.
 
-## Output Format
+## JSON Output Format
 
 ```json
 {
